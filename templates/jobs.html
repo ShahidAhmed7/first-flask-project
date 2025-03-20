@@ -1,0 +1,18 @@
+ <div class = "border-bottom border-primary-subtle container" style = "margin-bottom: 10px; padding-bottom: 15px;">
+    <div class = 'row'>
+        <div class="col-11">
+            <h4>{{ job['title'] }}</h4>
+            <div><b>Location:</b> {{ job['location'] }}</div>
+
+            {% if job['salary'] is not none %}
+                <div><b>Salary:</b> {{ "{:,.0f}".format(job['salary']) }} {{job['currency']}}</div>
+            {% else %}
+                <div><b>Salary:</b> Not Disclosed</div>
+            {% endif %}
+        </div>
+        <div class="col-1 align-self-center">
+            <button type="button" class="btn btn-outline-primary">Apply</button>
+        </div>
+    </div>
+</div>
+
