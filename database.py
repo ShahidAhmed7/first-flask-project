@@ -31,5 +31,15 @@ def get_job_list():
 
         jobs_list = [dict(row._mapping) for row in result_all]
         return jobs_list
+    
+def get_job_data(id):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM jobs WHERE id = :val"),{"val" : id})
+        res = result.all()
+        if len(res) == 0:
+            return None 
+        return dict(res[0]._mapping)
+
+    
 
 
