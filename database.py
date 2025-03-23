@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
+from sqlalchemy.exc import SQLAlchemyError
 import pymysql
 
 # Get the absolute path of the .env file
@@ -39,7 +40,28 @@ def get_job_data(id):
         if len(res) == 0:
             return None 
         return dict(res[0]._mapping)
+    
+def add_user(user_type,name,username,email,password_hash):
+    with engine.connect() as conn:
+        trans = conn.begin()
+        try : 
+            conn.execute(text("INSERT INTO users (name,username,email,password_hash,user_type) VALUES (:name,:username,:email, :password_hash, :user_type)"),{'name' : name,'username':username,'email':email,'password_hash':password_hash,'user_type':user_type})
+            trans.commit()
+            return True
+        except SQLAlchemyError as e: 
+            print(f"Database Error: {e}") # ✅ Catch SQL Errors
+            trans.rollback() # 🔄 Undo changes on failure             
+            return False   
 
     
-
+def get_user(username):
+    with engine.connect() as conn:
+        result = conn.execute(text("select password_hash from users where username = :username"),{"username": username})
+        result_all = result.all()
+        if result_all:
+            values = result_all[0]
+            res = list(values)
+            return res[0] 
+        else:
+            return None 
 
