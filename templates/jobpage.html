@@ -20,7 +20,9 @@
             <div class="card-body">
                 <h4 class="card-title fw-bold">{{ job['title'] }}</h4>
                 <p class="text-muted mb-1"><strong>Salary:</strong> {{ job['salary'] }} {{ job['currency'] }}</p>
+                <p class="text-muted mb-1"><strong>Organization:</strong> {{ job['company'] }}</p>
                 <p class="text-muted"><strong>Location:</strong> {{ job['location'] }}</p>
+
             </div>
         </div>
 
@@ -34,6 +36,13 @@
             <p class="text-secondary">{{ job['responsibilities'] }}</p>
         </div>
     </div>
+    {% if session['user_type'] == 'applicant' %}
+        <!-- Apply Button -->
+        <div class="d-flex justify-content-center align-items-center" style = "padding-top: 30px;">
+            <a href="mailto:shahid.ahmed.galib@g.bracu.ac.bd?subject=Job Application" class="btn btn-primary">Apply for the Job</a>
+        </div>
+    {% endif %}
+
 
     <!-- Footer -->
     <footer class="bg-light text-dark text-center py-3" style = "margin-top: 200px;">

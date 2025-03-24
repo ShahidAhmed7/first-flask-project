@@ -56,12 +56,27 @@ def add_user(user_type,name,username,email,password_hash):
     
 def get_user(username):
     with engine.connect() as conn:
-        result = conn.execute(text("select password_hash from users where username = :username"),{"username": username})
-        result_all = result.all()
-        if result_all:
-            values = result_all[0]
-            res = list(values)
-            return res[0] 
-        else:
-            return None 
+        result = conn.execute(text("SELECT * FROM users WHERE username = :username"), {"username": username})
+        res = result.all()  # Fetch all results (it will return at most one row)
+        
+        if len(res) == 0:
+            return None
+        return dict(res[0]._mapping)  # Convert the first row to a dictionary
 
+def delete_job_data(id):
+    with engine.connect() as conn:
+        trans = conn.begin()
+        conn.execute(text("DELETE FROM jobs WHERE id = :val"),{"val" : id})
+        trans.commit()
+
+def add_job_data(title,salary,company,location,responsibilities,requirements,posted_by):
+    with engine.connect() as conn:
+        trans = conn.begin()
+        try : 
+            conn.execute(text("INSERT INTO jobs (title,salary,currency,company,location,responsibilities,requirements,posted_by) VALUES (:title,:salary,:currency, :company, :location, :responsibilities, :requirements, :posted_by)"),{'title' : title, 'salary' : salary, 'currency': 'BDT', 'company': company, 'location' : location, 'responsibilities': responsibilities, 'requirements': requirements, 'posted_by' : posted_by})
+            trans.commit()
+            return True
+        except SQLAlchemyError as e: 
+            print(f"Database Error: {e}") # ✅ Catch SQL Errors
+            trans.rollback() # 🔄 Undo changes on failure             
+            return False  
