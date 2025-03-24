@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, session, redirect, url_for,flash, get_flashed_messages
+from flask import Flask, render_template, jsonify, request, session, redirect, url_for,flash
 from database import get_job_list, get_job_data, add_user,get_user,delete_job_data,add_job_data
 from flask_session import Session
 from flask_bcrypt import Bcrypt
