@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for,flash
 from database import get_job_list, get_job_data, add_user,get_user,delete_job_data,add_job_data
 from flask_session import Session
@@ -123,5 +124,6 @@ def add_job():
             return redirect((url_for('post_job')))
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
 
